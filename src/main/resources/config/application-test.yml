@@ -1,0 +1,13 @@
+server:
+  port: 8082
+
+#dog:
+#  name: Tom
+#  age: 3
+#  brith: 2022/10/10
+#  happy: true
+#  map: {k1: v1,k2: v2}
+#  list:
+#    - code
+#    - music
+#    - girl

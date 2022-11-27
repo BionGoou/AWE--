@@ -1,0 +1,28 @@
+
+server:
+  port: 8080
+
+spring:
+  datasource:
+    username: root
+    password:
+    # 如果时区报错就加上: serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/awedev?useUnicode=true&characterEncoding=utf-8
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+
+# token配置
+token:
+  # 令牌自定义标识
+  header: Authorization
+  # 令牌密钥
+  secret: abcdefghijklmnopqrstuvwxyz
+  # 令牌有效期（默认30分钟）
+  expireTime: 300
+
+# 整合mybatis-plus
+mybatis-plus:
+  type-aliases-package: com.awe.model.entity
+  mapper-locations: classpath:mybatis/mapper/*.xml
+  configuration.log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
