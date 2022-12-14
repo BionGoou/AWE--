@@ -1,4 +1,4 @@
-package com.awe.core.exception;
+package com.awe.exception;
 
 /**
  * 演示模式异常

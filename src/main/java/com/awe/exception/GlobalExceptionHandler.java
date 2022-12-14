@@ -1,4 +1,4 @@
-package com.awe.core.exception;
+package com.awe.exception;
 
 import com.awe.constant.HttpStatus;
 import com.awe.model.other.AjaxResult;

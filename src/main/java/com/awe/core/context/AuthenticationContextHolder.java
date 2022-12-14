@@ -1,4 +1,4 @@
-package com.awe.context;
+package com.awe.core.context;
 
 import org.springframework.security.core.Authentication;
 

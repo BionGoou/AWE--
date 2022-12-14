@@ -1,4 +1,4 @@
-package com.awe.context;
+package com.awe.core.context;
 
 import com.awe.utils.text.Convert;
 import org.springframework.web.context.request.RequestAttributes;

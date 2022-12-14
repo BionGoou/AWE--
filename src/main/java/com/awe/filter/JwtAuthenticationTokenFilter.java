@@ -7,9 +7,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.awe.constant.CacheConstant;
-import com.awe.context.AuthenticationContextHolder;
-import com.awe.core.component.RedisCache;
-import com.awe.core.exception.AuthenticationErrorException;
+import com.awe.core.context.AuthenticationContextHolder;
+import com.awe.component.RedisCache;
+import com.awe.exception.AuthenticationErrorException;
 import com.awe.model.other.LoginUser;
 import com.awe.utils.JwtUtil;
 import io.jsonwebtoken.Claims;

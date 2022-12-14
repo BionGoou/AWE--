@@ -1,7 +1,6 @@
 package com.awe.controller;
 
 import com.awe.constant.Constants;
-import com.awe.core.exception.AuthenticationErrorException;
 import com.awe.model.other.AjaxResult;
 import com.awe.model.vo.LoginVO;
 import com.awe.service.SysLoginService;

@@ -1,7 +1,7 @@
 package com.awe.utils;
 
 import com.awe.constant.HttpStatus;
-import com.awe.core.exception.ServiceException;
+import com.awe.exception.ServiceException;
 import com.awe.model.other.LoginUser;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

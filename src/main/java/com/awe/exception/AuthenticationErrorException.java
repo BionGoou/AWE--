@@ -1,4 +1,4 @@
-package com.awe.core.exception;
+package com.awe.exception;
 
 import org.springframework.security.core.AuthenticationException;
 

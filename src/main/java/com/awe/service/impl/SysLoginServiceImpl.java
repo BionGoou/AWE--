@@ -1,8 +1,8 @@
 package com.awe.service.impl;
 
 import com.awe.constant.CacheConstant;
-import com.awe.context.AuthenticationContextHolder;
-import com.awe.core.component.RedisCache;
+import com.awe.core.context.AuthenticationContextHolder;
+import com.awe.component.RedisCache;
 import com.awe.model.other.LoginUser;
 import com.awe.service.SysLoginService;
 import com.awe.utils.JwtUtil;
