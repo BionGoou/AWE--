@@ -8,4 +8,6 @@ package com.awe.service;
 public interface SysLoginService {
 
      String login(String username, String password, String code, String uuid);
+
+     void doRegister(String username, String password);
 }

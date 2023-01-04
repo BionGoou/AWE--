@@ -7,10 +7,8 @@ import com.awe.service.SysLoginService;
 import com.awe.service.SysMenuService;
 import com.awe.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 登录验证
@@ -18,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author BionGo
  */
 @RestController
+@RequestMapping("/user")
 public class SysLoginController {
     @Autowired
     private SysLoginService loginService;
@@ -37,6 +36,14 @@ public class SysLoginController {
         String token = loginService.login(loginVO.getUsername(), loginVO.getPassword(), loginVO.getCode(),
                 loginVO.getUuid());
         ajax.put(Constants.TOKEN, token);
+        return ajax;
+    }
+
+    @PostMapping("/register")
+    public AjaxResult register(@RequestBody @Validated LoginVO loginVO) {
+        AjaxResult ajax = AjaxResult.success();
+        loginService.doRegister(loginVO.getUsername(), loginVO.getPassword());
+        ajax.put(Constants.TOKEN, "");
         return ajax;
     }
 

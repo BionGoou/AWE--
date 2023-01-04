@@ -15,5 +15,7 @@ public interface SysUserMapper
      * @param userName 用户名
      * @return 用户对象信息
      */
-    public SysUserDO selectUserByUserName(String userName);
+    SysUserDO selectUserByUserName(String userName);
+
+    void doRegister(SysUserDO sysUserDO);
 }

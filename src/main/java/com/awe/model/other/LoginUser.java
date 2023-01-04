@@ -1,8 +1,8 @@
 package com.awe.model.other;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.awe.model.entity.SysRoleDO;
 import com.awe.model.entity.SysUserDO;
+import com.awe.model.entity.SysRoleDO;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -72,9 +72,7 @@ public class LoginUser implements UserDetails
     /** 角色对象 */
     private List<SysRoleDO> roles;
 
-    public boolean isAdmin() {
-        return isAdmin(this.user.getUserId());
-    }
+
 
     public static boolean isAdmin(Long userId) {
         return userId != null && 1L == userId;

@@ -17,16 +17,29 @@ public class GeneratorController {
     private GeneratorService generatorService;
 
     /**
-     * 登录方法
+     * sql
      *
      * @param definition 信息
      * @return 结果
      */
-    @PostMapping("/domain")
-    public AjaxResult generator(@RequestBody TableDefinitionVO definition) {
+    @PostMapping("/sql")
+    public AjaxResult buildCreateTableSql(@RequestBody TableDefinitionVO definition) {
         AjaxResult ajax = AjaxResult.success();
         String tableSql = generatorService.createTableSql(definition);
         ajax.put("tableSql", tableSql);
+        return ajax;
+    }
+    /**
+     * db实体对象
+     *
+     * @param definition 信息
+     * @return 结果
+     */
+    @PostMapping("/getEntityCode")
+    public AjaxResult buildEntityCode(@RequestBody TableDefinitionVO definition) {
+        AjaxResult ajax = AjaxResult.success();
+        String aaa = generatorService.buildEntityCode(definition);
+        ajax.put("aaa", aaa);
         return ajax;
     }
 }

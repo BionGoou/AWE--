@@ -40,48 +40,46 @@ public class SqlBuilder {
     /**
      * 构造建表 SQL
      *
-     * @param tableSchemaVO 表概要
+     * @param tableDefinition 表概要
      * @return 生成的 SQL
      */
-    public String buildCreateTableSql(TableDefinitionVO tableSchemaVO) {
-        // 构造模板
-        String template = "%s\n"
-                + "create table if not exists %s\n"
-                + "(\n"
-                + "%s\n"
-                + ") %s;";
-        // 构造表名
-        String tableName = sqlDialect.wrapTableName(tableSchemaVO.getTableName());
-        String dbName = tableSchemaVO.getDbName();
-        if (StringUtils.isNotBlank(dbName)) {
-            tableName = String.format("%s.%s", dbName, tableName);
-        }
+    public String buildCreateTableSql(TableDefinitionVO tableDefinition) {
+        // 创建模板
+        String template = "%s\n" + "create table if not exists %s\n" + "(\n" + "%s\n" + ") %s;";
+        //  给表名包上反单引号（防止关键字）
+        String tableName = this.getWrappedTableName(tableDefinition);
+        // 构造表注释内容
+        String commentContent = StringUtils.isBlank(tableDefinition.getTableComment())
+                ? tableDefinition.getTableName() : tableDefinition.getTableComment();
         // 构造表前缀注释
-        String tableComment = tableSchemaVO.getTableComment();
-        if (StringUtils.isBlank(tableComment)) {
-            tableComment = tableName;
-        }
-        String tablePrefixComment = String.format("-- %s", tableComment);
+        String prefixComment = String.format("-- %s", commentContent);
         // 构造表后缀注释
-        String tableSuffixComment = String.format("comment '%s'", tableComment);
+        String suffixComment = String.format("comment '%s'", commentContent);
         // 构造表字段
-        List<Field> fieldList = tableSchemaVO.getFieldList();
+        List<Field> fieldList = tableDefinition.getFieldList();
         StringBuilder fieldStrBuilder = new StringBuilder();
-        int fieldSize = fieldList.size();
-        for (int i = 0; i < fieldSize; i++) {
+        int length = fieldList.size();
+        for (int i = 0; i < length; i++) {
             Field field = fieldList.get(i);
             fieldStrBuilder.append(buildCreateFieldSql(field));
             // 最后一个字段后没有逗号和换行
-            if (i != fieldSize - 1) {
-                fieldStrBuilder.append(",");
-                fieldStrBuilder.append("\n");
-            }
+            if (i == length - 1) break;
+            fieldStrBuilder.append(",");
+            fieldStrBuilder.append("\n");
         }
         String fieldStr = fieldStrBuilder.toString();
-        // 填充模板
-        String result = String.format(template, tablePrefixComment, tableName, fieldStr, tableSuffixComment);
-        log.info("sql result = " + result);
+        String result = String.format(template, prefixComment, tableName, fieldStr, suffixComment);
+        log.info("建表sql最终输出结果:" + result);
         return result;
+    }
+
+    private String getWrappedTableName(TableDefinitionVO tableDefinition) {
+        String wrappedTableName = this.sqlDialect.wrapTableName(tableDefinition.getTableName());
+        String dbName = tableDefinition.getDbName();
+        if (StringUtils.isNotBlank(dbName)) {
+            return String.format("%s.%s", dbName, wrappedTableName);
+        }
+        return wrappedTableName;
     }
 
     /**
@@ -91,62 +89,47 @@ public class SqlBuilder {
      * @return String
      */
     public String buildCreateFieldSql(Field field) {
-        if (field == null) {
-            throw new RuntimeException("");
-        }
-        String fieldName = sqlDialect.wrapFieldName(field.getFieldName());
-        String fieldType = field.getFieldType();
-        String defaultValue = field.getDefaultValue();
-        boolean notNull = field.isNotNull();
-        String comment = field.getComment();
-        String onUpdate = field.getOnUpdate();
-        boolean primaryKey = field.isPrimaryKey();
-        boolean autoIncrement = field.isAutoIncrement();
-        // e.g. column_name int default 0 not null auto_increment comment '注释' primary key,
-        StringBuilder fieldStrBuilder = new StringBuilder();
+        // 开始拼串串
+        StringBuilder result = new StringBuilder();
         // 字段名
-        fieldStrBuilder.append(fieldName);
+        result.append(sqlDialect.wrapFieldName(field.getFieldName()));
         // 字段类型
-        fieldStrBuilder.append(" ").append(fieldType);
+        result.append(" ").append(field.getFieldType());
         // 默认值
-        if (StringUtils.isNotBlank(defaultValue)) {
-            fieldStrBuilder.append(" ").append("default ").append(getValueStr(field, defaultValue));
-        }
+        String defaultValue = field.getDefaultValue();
+        if (StringUtils.isNotBlank(defaultValue)) result.append(" ")
+                .append("default ").append(getValueStr(field, defaultValue));
         // 是否非空
-        fieldStrBuilder.append(" ").append(notNull ? "not null" : "null");
+        result.append(" ").append(field.isNotNull() ? "not null" : "null");
         // 是否自增
-        if (autoIncrement) {
-            fieldStrBuilder.append(" ").append("auto_increment");
+        if (field.isAutoIncrement()) {
+            result.append(" ").append("auto_increment");
         }
         // 附加条件
-        if (StringUtils.isNotBlank(onUpdate)) {
-            fieldStrBuilder.append(" ").append("on update ").append(onUpdate);
-        }
+        String onUpdate = field.getOnUpdate();
+        if (StringUtils.isNotBlank(onUpdate)) result.append(" ").append("on update ").append(onUpdate);
         // 注释
-        if (StringUtils.isNotBlank(comment)) {
-            fieldStrBuilder.append(" ").append(String.format("comment '%s'", comment));
-        }
+        String comment = field.getComment();
+        if (StringUtils.isNotBlank(comment)) result.append(" ").append(String.format("comment '%s'", comment));
         // 是否为主键
-        if (primaryKey) {
-            fieldStrBuilder.append(" ").append("primary key");
-        }
-        return fieldStrBuilder.toString();
+        if (field.isPrimaryKey()) result.append(" ").append("primary key");
+        return result.toString();
     }
 
     /**
      * 根据列的属性获取值字符串
      *
-     * @param field
-     * @param value
-     * @return
+     * @param field 单列定义信息
+     * @param value 默认值
+     * @return String
      */
-    public static String getValueStr(Field field, Object value) {
-        if (field == null || value == null) {
+    public static String getValueStr(Field field, String value) {
+        if (value == null) {
             return "''";
         }
         FieldTypeEnum fieldTypeEnum = Optional.ofNullable(FieldTypeEnum.getEnumByValue(field.getFieldType()))
                 .orElse(FieldTypeEnum.TEXT);
-        String result = String.valueOf(value);
+        String result = value;
         switch (fieldTypeEnum) {
             case DATETIME:
             case TIMESTAMP:

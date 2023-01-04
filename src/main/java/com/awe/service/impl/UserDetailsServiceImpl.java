@@ -36,6 +36,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     private UserDetails createLoginUser(SysUserDO user) {
-        return new LoginUser(user.getUserId(), user.getDeptId(), user, null);
+        return new LoginUser(1L, 1L, user, null);
     }
 }

@@ -1,7 +1,6 @@
 package com.awe.service;
 
 import com.awe.model.entity.SysUserDO;
-import org.springframework.stereotype.Service;
 
 /**
  * 用户 业务层

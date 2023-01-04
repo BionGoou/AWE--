@@ -6,4 +6,8 @@
     <select id="selectUserByUserName" resultType="SysUserDO">
         select * from sys_user where user_name=#{username}
     </select>
+
+    <insert id="doRegister" useGeneratedKeys="true" keyProperty="userId" parameterType="SysUserDO">
+        insert into `sys_user` (user_name,password) values (#{userName},#{password});
+    </insert>
 </mapper>

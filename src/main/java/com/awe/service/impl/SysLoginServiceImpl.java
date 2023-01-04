@@ -3,6 +3,8 @@ package com.awe.service.impl;
 import com.awe.constant.CacheConstant;
 import com.awe.core.context.AuthenticationContextHolder;
 import com.awe.component.RedisCache;
+import com.awe.mapper.SysUserMapper;
+import com.awe.model.entity.SysUserDO;
 import com.awe.model.other.LoginUser;
 import com.awe.service.SysLoginService;
 import com.awe.utils.JwtUtil;
@@ -27,6 +29,9 @@ public class SysLoginServiceImpl implements SysLoginService {
 
     @Autowired
     private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private SysUserMapper sysUserMapper;
 
     /**
      * 登录验证
@@ -54,5 +59,13 @@ public class SysLoginServiceImpl implements SysLoginService {
         String UUID = IdUtils.fastUUID();
         redisCache.setCacheObject(CacheConstant.USER_INFO_KEY + UUID, loginUser);
         return JwtUtil.createJWT(UUID,loginUser.getUsername());
+    }
+
+    @Override
+    public void doRegister(String username, String password) {
+        SysUserDO sysUserDO = new SysUserDO();
+        sysUserDO.setUserName(username);
+        sysUserDO.setPassword(password);
+        this.sysUserMapper.doRegister(sysUserDO);
     }
 }
