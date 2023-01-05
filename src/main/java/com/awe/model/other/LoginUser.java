@@ -4,11 +4,14 @@ import com.alibaba.fastjson.annotation.JSONField;
 import com.awe.model.entity.SysUserDO;
 import com.awe.model.entity.SysRoleDO;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 登录用户身份权限
@@ -68,6 +71,9 @@ public class LoginUser implements UserDetails
      * 权限列表
      */
     private Set<String> permissions;
+
+    @JSONField(serialize = false)
+    private List<SimpleGrantedAuthority> authorities;
 
     /** 角色对象 */
     private List<SysRoleDO> roles;
@@ -271,9 +277,15 @@ public class LoginUser implements UserDetails
     }
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities()
-    {
-        return null;
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+
+        // 将permissions中的String类型的权限信息封装成SimpleGrantedAuthority对象
+        if(!Objects.isNull(authorities)){
+            return this.authorities;
+        }
+        this.authorities = this.permissions.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
+        return this.authorities;
+
     }
 
     public List<SysRoleDO> getRoles() {

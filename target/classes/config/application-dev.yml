@@ -3,6 +3,11 @@ server:
   port: 8080
 
 spring:
+  #设置上传文件大小，默认是1M
+  servlet:
+    multipart:
+      max-request-size: 200MB
+      max-file-size: 200MB
   datasource:
     username: root
     password:
@@ -58,4 +63,6 @@ logging:
       file-name-pattern: log/%d{yyyy-MM}/ota.%d{yyyy-MM-dd}.%i.log
 #  pattern:
 #    console: "{%n 时间：%d{yyyy-MM}%n 线程：[%thread] %n 等级： %-5level %n 内容：%logger{50}-%msg%n}%n"
+
+
 

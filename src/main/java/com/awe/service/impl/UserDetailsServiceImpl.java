@@ -1,20 +1,30 @@
 package com.awe.service.impl;
 
 import com.awe.core.context.ApplicationContextUtil;
+import com.awe.model.entity.SysMenuDO;
 import com.awe.model.entity.SysUserDO;
 import com.awe.model.other.LoginUser;
+import com.awe.service.SysMenuService;
 import com.awe.service.SysUserService;
 import com.awe.utils.StringUtils;
 import com.awe.utils.UserStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
+
+    @Autowired
+    private SysMenuService sysMenuService;
 
     private static final Logger log = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
 
@@ -36,6 +46,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     private UserDetails createLoginUser(SysUserDO user) {
-        return new LoginUser(1L, 1L, user, null);
+        List<SysMenuDO> sysMenuDOS = sysMenuService.selectMenuTreeByUserId(user.getUserId());
+        Set<String> permissions = new HashSet<>();
+        for(SysMenuDO s : sysMenuDOS){
+            permissions.add(s.getPerms());
+        }
+        return new LoginUser(user.getUserId(), null, user, permissions);
     }
 }

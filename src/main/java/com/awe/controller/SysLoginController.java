@@ -7,6 +7,7 @@ import com.awe.service.SysLoginService;
 import com.awe.service.SysMenuService;
 import com.awe.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,7 +43,7 @@ public class SysLoginController {
     @PostMapping("/register")
     public AjaxResult register(@RequestBody @Validated LoginVO loginVO) {
         AjaxResult ajax = AjaxResult.success();
-        loginService.doRegister(loginVO.getUsername(), loginVO.getPassword());
+        loginService.doRegister(loginVO.getUsername(), new BCryptPasswordEncoder().encode(loginVO.getPassword()));
         ajax.put(Constants.TOKEN, "");
         return ajax;
     }

@@ -16,5 +16,5 @@ public interface SysMenuMapper
      * @param userId 用户ID
      * @return 菜单列表
      */
-    public List<SysMenuDO> selectMenuTreeByUserId(Long userId);
+    List<SysMenuDO> selectMenuTreeByUserId(Long userId);
 }

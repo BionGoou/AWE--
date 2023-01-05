@@ -18,7 +18,7 @@ public class SysUserDO implements Serializable {
      * 用户ID
      */
     @TableId
-    private String userId;
+    private Long userId;
 
     /**
      * 用户账号
