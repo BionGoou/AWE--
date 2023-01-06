@@ -10,4 +10,9 @@
         ,NOW(),#{finalEducation},#{birthplace},#{residence},#{visaType},#{occupation},#{annualIncome},#{maritalStatus}
         ,#{wechatNum},#{phoneNum},#{nuisance},#{selfIntroduction},#{requirement},#{createBy},#{createTime});
     </insert>
+
+    <update id="connectToUserTable" >
+        update `sys_user` set event_id=#{eventNm}, update_by=#{userName} , update_time=#{updateTime}
+        where user_name = #{userName}
+    </update>
 </mapper>

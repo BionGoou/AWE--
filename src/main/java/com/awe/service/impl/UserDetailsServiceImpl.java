@@ -16,9 +16,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -47,10 +46,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     private UserDetails createLoginUser(SysUserDO user) {
         List<SysMenuDO> sysMenuDOS = sysMenuService.selectMenuTreeByUserId(user.getUserId());
-        Set<String> permissions = new HashSet<>();
+        List<String> permissions = new ArrayList<>();
         for(SysMenuDO s : sysMenuDOS){
             permissions.add(s.getPerms());
         }
-        return new LoginUser(user.getUserId(), null, user, permissions);
+        return new LoginUser(user,permissions);
     }
 }

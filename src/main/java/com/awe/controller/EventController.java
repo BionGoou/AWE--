@@ -4,6 +4,7 @@ import com.awe.exception.ServiceException;
 import com.awe.model.other.AjaxResult;
 import com.awe.model.vo.EventInfoVO;
 import com.awe.service.EventService;
+import com.awe.utils.SecurityUtils;
 import com.awe.utils.StringUtils;
 import com.awe.utils.uuid.IdUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,10 +32,9 @@ public class EventController {
      *
      * @param fileUpload 上传图片
      */
-    @PreAuthorize("@av.hasAuthority('event')")
+    @PreAuthorize("hasAuthority('event')")
     @PostMapping("/imgUpload")
-    public String imgUpload(@RequestParam("file") MultipartFile fileUpload) {
-        //获取文件名
+    public AjaxResult imgUpload(@RequestParam("file") MultipartFile fileUpload) {
         String fileName = fileUpload.getOriginalFilename();
         String imgType = "";
         if(StringUtils.isBlank(fileName)){
@@ -43,23 +43,20 @@ public class EventController {
             String[] arr = fileName.split("\\.");
             imgType = arr[arr.length - 1];
         }
-
-        String UUID = IdUtils.fastUUID();
-        String tmpFilePath =  "c://test//image//"  ;
+        String tmpFilePath =  "c://event_user_info//"+ SecurityUtils.getUsername() + "//";
         //没有路径就创建路径
-        boolean result = false;
         File tmp = new File(tmpFilePath);
         if (!tmp.exists()) {
-            result = tmp.mkdirs();
+            tmp.mkdirs();
         }
-        String resourcesPath = tmpFilePath + "//" + UUID + "." +imgType;
+        String resourcesPath = tmpFilePath + "//avatar." +imgType;
         File upFile = new File(resourcesPath);
         try {
             fileUpload.transferTo(upFile);
         } catch (IOException e) {
-            return "";
+            return AjaxResult.error("上传失败,请重新上传");
         }
-        return UUID;
+        return AjaxResult.success("上传成功");
     }
 
     /**
@@ -68,7 +65,7 @@ public class EventController {
      * @param eventInfoVO 登录信息
      * @return 结果
      */
-    @PreAuthorize("@av.hasAuthority('event')")
+    @PreAuthorize("hasAuthority('event')")
     @PostMapping("/eventInfoRegis")
     public AjaxResult eventInfoRegis(@RequestBody EventInfoVO eventInfoVO) {
         AjaxResult ajax = AjaxResult.success();

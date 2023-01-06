@@ -53,9 +53,6 @@ public class EventInfoVO {
     private String isPrivate;
 
     @NotBlank
-    private String profilePhoto;
-
-    @NotBlank
     private String residence;
 
     @NotBlank

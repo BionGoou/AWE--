@@ -15,7 +15,7 @@ public class AccessDeniedHandlerImpl implements AccessDeniedHandler {
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response,
                        org.springframework.security.access.AccessDeniedException e) {
-        AjaxResult result = AjaxResult.error("很抱歉，你没有权限访问此接口");
+        AjaxResult result = AjaxResult.error("该接口只能匿名访问谢谢");
         String json = JSON.toJSONString(result);
         WebUtils.renderString(response,json);
     }
