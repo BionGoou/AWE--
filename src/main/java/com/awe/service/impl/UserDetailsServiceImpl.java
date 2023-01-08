@@ -1,6 +1,7 @@
 package com.awe.service.impl;
 
 import com.awe.core.context.ApplicationContextUtil;
+import com.awe.exception.ServiceException;
 import com.awe.mapper.SysUserMapper;
 import com.awe.model.entity.SysMenuDO;
 import com.awe.model.entity.SysUserDO;
@@ -56,6 +57,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         }
         String gender = sysUserMapper.selectGenderByUsername(user.getUserName());
         user.setGender(gender);
+        user.setRole("1".equals(user.getUserId().toString())?"1":"2");
         return new LoginUser(user,permissions);
     }
 }

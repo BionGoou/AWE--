@@ -20,6 +20,8 @@ public interface SysUserMapper
 
     String selectGenderByUsername(String userName);
 
+    String selectRoleByUsername(String userName);
+
     void doRegister(SysUserDO sysUserDO);
 
     void connectToRoleTable(Long userId);

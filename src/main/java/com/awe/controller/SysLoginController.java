@@ -11,6 +11,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 /**
  * 登录验证
  *
@@ -34,9 +36,11 @@ public class SysLoginController {
     @PostMapping("/login")
     public AjaxResult login(@RequestBody LoginVO loginVO) {
         AjaxResult ajax = AjaxResult.success();
-        String token = loginService.login(loginVO.getUsername(), loginVO.getPassword(), loginVO.getCode(),
+        Map<String, String> info = loginService.login(loginVO.getUsername(), loginVO.getPassword(), loginVO.getCode(),
                 loginVO.getUuid());
-        ajax.put(Constants.TOKEN, token);
+        ajax.put(Constants.TOKEN, info.get("token"));
+        ajax.put("isRegisInfo", info.get("isRegisInfo"));
+        ajax.put("role", info.get("role"));
         return ajax;
     }
 
@@ -44,7 +48,6 @@ public class SysLoginController {
     public AjaxResult register(@RequestBody @Validated LoginVO loginVO) {
         AjaxResult ajax = AjaxResult.success();
         loginService.doRegister(loginVO.getUsername(), new BCryptPasswordEncoder().encode(loginVO.getPassword()));
-        ajax.put(Constants.TOKEN, "");
         return ajax;
     }
 

@@ -9,6 +9,7 @@ import com.awe.model.entity.SysUserDO;
 import com.awe.model.other.LoginUser;
 import com.awe.service.SysLoginService;
 import com.awe.utils.JwtUtil;
+import com.awe.utils.StringUtils;
 import com.awe.utils.uuid.IdUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,6 +18,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 登录校验方法
@@ -44,7 +48,7 @@ public class SysLoginServiceImpl implements SysLoginService {
      * @param uuid     唯一标识
      * @return 结果
      */
-    public String login(String username, String password, String code, String uuid) {
+    public Map<String,String> login(String username, String password, String code, String uuid) {
         Authentication authentication = null;
         try {
             UsernamePasswordAuthenticationToken authenticationToken =
@@ -61,7 +65,15 @@ public class SysLoginServiceImpl implements SysLoginService {
         String UUID = IdUtils.fastUUID();
         loginUser.setUuid(UUID);
         redisCache.setCacheObject(CacheConstant.USER_INFO_KEY + UUID, loginUser);
-        return JwtUtil.createJWT(UUID,loginUser.getUsername());
+        Map<String,String> returnObj = new HashMap<>();
+        if(StringUtils.isBlank(loginUser.getUser().getGender())){
+            returnObj.put("isRegisInfo","0");
+        }else{
+            returnObj.put("isRegisInfo","1");
+        }
+        returnObj.put("token",JwtUtil.createJWT(UUID,loginUser.getUsername()));
+        returnObj.put("role",loginUser.getUser().getRole());
+        return returnObj;
     }
 
     @Transactional

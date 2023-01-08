@@ -12,6 +12,11 @@
         where su.user_name = #{username}
     </select>
 
+    <select id="selectRoleByUsername" resultType="String">
+        select  sur.role_id as role from sys_user su
+        left join sys_user_role sur on su.user_id = sur.user_id
+        where su.user_name = #{username}
+    </select>
 
     <insert id="doRegister" useGeneratedKeys="true" keyProperty="userId" parameterType="SysUserDO">
         insert into `sys_user` (user_name,password) values (#{userName},#{password});

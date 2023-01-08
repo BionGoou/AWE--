@@ -25,6 +25,9 @@ public class SysUserDO implements Serializable {
      */
     private String userName;
 
+
+    private String role;
+
     /**
      * 密码
      */

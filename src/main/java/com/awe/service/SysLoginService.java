@@ -1,5 +1,7 @@
 package com.awe.service;
 
+import java.util.Map;
+
 /**
  * 登录校验方法
  *
@@ -7,7 +9,7 @@ package com.awe.service;
  */
 public interface SysLoginService {
 
-     String login(String username, String password, String code, String uuid);
+     Map<String,String> login(String username, String password, String code, String uuid);
 
      void doRegister(String username, String password);
 }
