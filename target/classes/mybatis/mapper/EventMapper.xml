@@ -3,14 +3,16 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.awe.mapper.EventMapper">
+    <select id="loadEventInfoByGender" resultType="EventInfoDO">
+        select * from event_participator where gender=#{gender}
+    </select>
     <insert id="eventInfoRegis"  parameterType="EventInfoDO">
-        insert into `event_participator` (event_id,real_name,gender,height,birthday,final_education
-        ,birthplace,residence,visaType,occupation,annualIncome,maritalStatus,wechatNum,phoneNum
+        insert into `event_participator` (eventNum,real_name,gender,height,birthday,final_education
+        ,birthplace,residence,visaType,occupation,annualIncome,maritalStatus,wechatNum,phoneNum,private_flag,profilePhoto
         ,nuisance,selfIntroduction,requirement,create_by,create_time) values (#{eventNum},#{realName},#{gender},#{height}
-        ,NOW(),#{finalEducation},#{birthplace},#{residence},#{visaType},#{occupation},#{annualIncome},#{maritalStatus}
-        ,#{wechatNum},#{phoneNum},#{nuisance},#{selfIntroduction},#{requirement},#{createBy},#{createTime});
+        ,#{birthday},#{finalEducation},#{birthplace},#{residence},#{visaType},#{occupation},#{annualIncome},#{maritalStatus}
+        ,#{wechatNum},#{phoneNum},#{isPrivate},#{profilePhoto},#{nuisance},#{selfIntroduction},#{requirement},#{createBy},#{createTime});
     </insert>
-
     <update id="connectToUserTable" >
         update `sys_user` set event_id=#{eventNm}, update_by=#{userName} , update_time=#{updateTime}
         where user_name = #{userName}

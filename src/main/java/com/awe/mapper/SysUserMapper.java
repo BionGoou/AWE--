@@ -8,6 +8,7 @@ import com.awe.model.entity.SysUserDO;
  * @author BionGo
  */
 public interface SysUserMapper
+
 {
     /**
      * 通过用户名查询用户
@@ -17,5 +18,9 @@ public interface SysUserMapper
      */
     SysUserDO selectUserByUserName(String userName);
 
+    String selectGenderByUsername(String userName);
+
     void doRegister(SysUserDO sysUserDO);
+
+    void connectToRoleTable(Long userId);
 }

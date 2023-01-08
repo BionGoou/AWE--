@@ -19,6 +19,8 @@ public class LoginUser implements UserDetails {
 
     private SysUserDO user;
 
+    private String uuid;
+
     private List<String> permissions;
 
     public void setUser(SysUserDO user) {

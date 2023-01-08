@@ -6,8 +6,17 @@
     <select id="selectUserByUserName" resultType="SysUserDO">
         select * from sys_user where user_name=#{username}
     </select>
+    <select id="selectGenderByUsername" resultType="String">
+        select ep.gender as gender from sys_user su
+        left join event_participator ep on su.event_id = ep.eventNum
+        where su.user_name = #{username}
+    </select>
+
 
     <insert id="doRegister" useGeneratedKeys="true" keyProperty="userId" parameterType="SysUserDO">
         insert into `sys_user` (user_name,password) values (#{userName},#{password});
+    </insert>
+    <insert id="connectToRoleTable" >
+        insert into sys_user_role values (#{userId}, '2');
     </insert>
 </mapper>

@@ -31,6 +31,11 @@ public class SysUserDO implements Serializable {
     private String password;
 
     /**
+     * 关联表中字段
+     */
+    private String gender;
+
+    /**
      * 活动番号
      */
     private String eventNm;

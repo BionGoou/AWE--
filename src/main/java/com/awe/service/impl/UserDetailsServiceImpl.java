@@ -1,6 +1,7 @@
 package com.awe.service.impl;
 
 import com.awe.core.context.ApplicationContextUtil;
+import com.awe.mapper.SysUserMapper;
 import com.awe.model.entity.SysMenuDO;
 import com.awe.model.entity.SysUserDO;
 import com.awe.model.other.LoginUser;
@@ -24,6 +25,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
     private SysMenuService sysMenuService;
+
+    @Autowired
+    private SysUserMapper sysUserMapper;
 
     private static final Logger log = LoggerFactory.getLogger(UserDetailsServiceImpl.class);
 
@@ -50,6 +54,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         for(SysMenuDO s : sysMenuDOS){
             permissions.add(s.getPerms());
         }
+        String gender = sysUserMapper.selectGenderByUsername(user.getUserName());
+        user.setGender(gender);
         return new LoginUser(user,permissions);
     }
 }

@@ -1,5 +1,6 @@
 package com.awe.model.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
@@ -11,10 +12,11 @@ import java.util.Date;
 public class EventInfoDO implements Serializable {
 
     @TableId
-    private String primaryKey;
+    private Long primaryKey;
 
     private String eventNum;
 
+    @TableField("real_name")
     private String realName;
 
     private String annualIncome;
@@ -23,6 +25,7 @@ public class EventInfoDO implements Serializable {
 
     private String birthplace;
 
+    @TableField("final_education")
     private String finalEducation;
 
     private String visaType;
@@ -41,7 +44,10 @@ public class EventInfoDO implements Serializable {
 
     private String phoneNum;
 
+    @TableField("private_flag")
     private String isPrivate;
+
+    private String profilePhoto;
 
     private String residence;
 
@@ -49,11 +55,15 @@ public class EventInfoDO implements Serializable {
 
     private String requirement;
 
+    @TableField("create_by")
     private String createBy;
 
+    @TableField("create_time")
     private Date createTime;
 
+    @TableField("update_by")
     private String updateBy;
 
+    @TableField("update_time")
     private Date updateTime;
 }

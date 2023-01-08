@@ -3,6 +3,7 @@ package com.awe.service.impl;
 import com.awe.constant.CacheConstant;
 import com.awe.core.context.AuthenticationContextHolder;
 import com.awe.component.RedisCache;
+import com.awe.exception.ServiceException;
 import com.awe.mapper.SysUserMapper;
 import com.awe.model.entity.SysUserDO;
 import com.awe.model.other.LoginUser;
@@ -15,6 +16,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 登录校验方法
@@ -57,15 +59,21 @@ public class SysLoginServiceImpl implements SysLoginService {
         }
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
         String UUID = IdUtils.fastUUID();
+        loginUser.setUuid(UUID);
         redisCache.setCacheObject(CacheConstant.USER_INFO_KEY + UUID, loginUser);
         return JwtUtil.createJWT(UUID,loginUser.getUsername());
     }
 
+    @Transactional
     @Override
     public void doRegister(String username, String password) {
         SysUserDO sysUserDO = new SysUserDO();
         sysUserDO.setUserName(username);
         sysUserDO.setPassword(password);
         this.sysUserMapper.doRegister(sysUserDO);
+        if(sysUserDO.getUserId() == null){
+            throw new ServiceException("注册失败");
+        }
+        this.sysUserMapper.connectToRoleTable(sysUserDO.getUserId());
     }
 }
